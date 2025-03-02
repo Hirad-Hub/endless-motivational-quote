@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Quote</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+      a
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="/index.html">
+          <svg
+            id="logo"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 100 100"
+            width="80"
+            height="80"
+          >
+            <!-- Example of a logo with a fill attribute -->
+            <circle cx="50" cy="50" r="40" fill="hsl(0, 72%, 83%)" />
+          </svg>
+        </a>
+      </div>
+      <div class="confetti"></div>
+    </header>
+    <div class="container">
+      <blockquote id="quote">Loading...</blockquote>
+      <p id="author"></p>
+      <div class="button-container">
+        <button id="refresh">
+          <span class="material-icons">refresh</span> New quote
+        </button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+      // Fetch request to Airtable API
+      fetch(`https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`, {
+        method: "GET",
+        headers: {
+          Authorization:
+            "Bearer patfgfscWJv0YWCiF.618b33069ff9120639f687e92d4a366413c1e40e55659e216c556f716c1b9418", // Replace with your actual Airtable API key
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          // You can insert additional logic to handle the response data
+        })
+        .catch((error) => console.error("Error:", error));
+    </script>
+    <footer>
+      <div class="footer-text">
+        <p>
+          Endless motivational quotes by
+          <a
+            href="https://hirad.framer.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Hirad</a
+          >
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

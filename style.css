@@ -1,0 +1,119 @@
+body {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-width: 90vw;
+  margin: 0 auto;
+  background-color: hsl(55, 72%, 83%);
+  flex-direction: column;
+  transition: background-color 1s ease-in-out; /* Smooth transition */
+}
+
+header {
+  width: 90%;
+  max-width: 1080px;
+  padding-top: 80px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #080e21;
+  position: fixed;
+  top: 0;
+}
+
+.container {
+  text-align: center;
+  padding-bottom: 80px;
+  border-radius: 8px;
+  max-width: 800px;
+}
+
+blockquote {
+  font-size: 48px;
+  font-weight: normal;
+  margin: 20px 0;
+}
+
+p {
+  font-size: 16px;
+  font-weight: normal;
+  color: #555;
+}
+
+button {
+  font-family: "Poppins", sans-serif;
+  padding: 12px 24px 12px 16px;
+  border: 1px solid #080e21;
+  background-color: white;
+  color: #080e21;
+  font-size: 16px;
+  border-radius: 100px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Space between icon and text */
+  justify-content: center;
+  margin: 24px auto;
+  transition: background 1s ease, color 1s ease;
+}
+
+button span {
+  font-size: 20px; /* Adjust icon size if needed */
+  display: flex;
+  align-items: center;
+}
+
+button:hover {
+  background: #080e21;
+  color: #ffffff;
+}
+
+.button-container {
+  margin: 64px auto;
+}
+
+button:active {
+  background-color: rgb(52, 21, 103);
+  color: rgb(255, 255, 255);
+  transition: background-color 1s ease, color 1s ease;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding-top: 24px;
+  padding-bottom: 8px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+#quote,
+#author,
+#refresh {
+  opacity: 0; /* Initially hidden */
+  transition: opacity 1s ease; /* Smooth fade transition */
+}
+
+#quote.visible,
+#author.visible,
+#refresh.visible {
+  opacity: 1; /* Make visible when the class is added */
+}
+
+@media (max-width: 560px) {
+  blockquote {
+    font-size: 32px; /* Smaller font size */
+  }
+
+  header {
+    padding-top: 24px; /* Smaller padding for header */
+  }
+}

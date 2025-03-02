@@ -1,0 +1,13 @@
+// async function fetchRandomQuote() { try { const response = await fetch(
+`https://api.airtable.com/v0/apphESc74bJHeT81r/tbll3eDFHff1DsgEa/rec01ZgQ3deaQ8J3E`
+); const data = await response.json(); console.log("API Response:", data); //
+Log the full response to see what you get if (data.records &&
+data.records.length > 0) { // Make sure 'records' exists and has length const
+records = data.records; const randomIndex = Math.floor(Math.random() *
+records.length); const quoteData = records[randomIndex].fields;
+document.getElementById("quote").textContent = quoteData.quote || "Unknown
+Quote"; document.getElementById("author").textContent = quoteData.author ? `-
+${quoteData.author}` : "- Unknown"; } else { console.error("No records found or
+records are undefined."); } } catch (error) { console.error("Error fetching
+quote:", error); } } // document // .getElementById("refresh") //
+.addEventListener("click", fetchRandomQuote); // fetchRandomQuote();
