@@ -75,3 +75,28 @@ window.onload = function () {
   document.getElementById("author").classList.add("visible");
   document.getElementById("refresh").classList.add("visible");
 };
+
+/*favion change*/
+function updateFavicon() {
+  const favicon = document.getElementById("dynamic-favicon");
+
+  // Check the preferred color scheme (light or dark mode)
+  const prefersDarkScheme = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+
+  // Set the favicon based on the color scheme
+  if (prefersDarkScheme) {
+    favicon.setAttribute("href", "favicon-white.svg"); // Dark mode favicon
+  } else {
+    favicon.setAttribute("href", "favicon-black.svg"); // Light mode favicon
+  }
+}
+
+// Call the function on page load
+window.addEventListener("DOMContentLoaded", updateFavicon);
+
+// Optionally, you can listen for changes in the color scheme preference
+window
+  .matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", updateFavicon);
