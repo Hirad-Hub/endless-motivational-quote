@@ -5,64 +5,104 @@ const apiKey =
 const apiUrl = `https://api.airtable.com/v0/${baseId}/${tableId}`;
 
 // Fetch quotes from Airtable API
-async function fetchQuotes() {
-  try {
-    const response = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-    });
+let allQuotes = []; // Cache the quotes
 
-    const data = await response.json();
-    return data.records; // List of all quotes
+// Fetch quotes from Airtable API
+async function fetchQuotes() {
+  const maxRecords = 1000;
+  let offset = null;
+  let progress = 10; // Initial progress percentage
+
+  try {
+    // Update the loading percentage every 1 second
+    const updateProgressInterval = setInterval(() => {
+      if (progress < 100) {
+        progress += Math.random() * 10; // Increase progress
+        document.getElementById("loading-percentage").textContent = `${Math.min(
+          Math.floor(progress),
+          100
+        )}%`;
+      }
+    }, 1000);
+
+    // Fetch quotes until we reach the maxRecords (2000 quotes)
+    while (allQuotes.length < maxRecords) {
+      const response = await fetch(
+        `${apiUrl}?pageSize=100${offset ? `&offset=${offset}` : ""}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+      allQuotes.push(...data.records);
+      offset = data.offset;
+
+      // If no more records, break the loop
+      if (!offset) break;
+    }
+
+    // Limit to 2000 quotes if there are more than 2000 records
+    allQuotes = allQuotes.slice(0, maxRecords);
+
+    // Clear the interval once fetching is done and the percentage reaches 100%
+    clearInterval(updateProgressInterval);
+
+    // Ensure the percentage reaches 100%
+    document.getElementById("loading-percentage").textContent = "100%";
   } catch (error) {
     console.error("Error fetching quotes:", error);
-    return [];
   }
 }
 
 // Display random quote
-async function displayRandomQuote() {
-  const quotes = await fetchQuotes();
-  if (quotes.length === 0) return;
+// Display random quote from the cached quotes
+function displayRandomQuote() {
+  if (allQuotes.length === 0) return; // If quotes are not loaded, return
 
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  const randomQuote = quotes[randomIndex].fields;
+  const randomIndex = Math.floor(Math.random() * allQuotes.length);
+  const randomQuote = allQuotes[randomIndex].fields;
 
   const quoteElement = document.getElementById("quote");
   const authorElement = document.getElementById("author");
   const refreshButton = document.getElementById("refresh");
 
-  // Step 1: Fade out the current quote, author, and refresh button
+  // Fade out the current quote, author, and refresh button
   quoteElement.classList.remove("visible");
   authorElement.classList.remove("visible");
   refreshButton.classList.remove("visible");
 
-  // Step 2: Wait for the fade-out transition to complete before updating content
+  // Wait for the fade-out transition to complete before updating content
   setTimeout(function () {
     // Update the quote content dynamically
     quoteElement.textContent = randomQuote.quote || "No quote available.";
     authorElement.textContent = `— ${randomQuote.author || "Unknown"}`;
 
-    // Step 3: Fade in the new quote, author, and refresh button
+    // Fade in the new quote, author, and refresh button
     quoteElement.classList.add("visible");
     authorElement.classList.add("visible");
     refreshButton.classList.add("visible");
   }, 1000); // This matches the transition duration (1s)
 
-  // Update the background color
+  // Update background color
   let hue = Math.floor(Math.random() * 360); // Random initial hue
   document.body.style.backgroundColor = `hsl(${hue}, 72%, 85%)`;
 
-  // Update the logo color (assuming the logo is an inline SVG)
+  // Update logo color
   const logo = document.querySelector("#logo circle");
   logo.setAttribute("fill", `hsl(${hue}, 72%, 85%)`);
 }
 
 // Load a random quote on page load
-window.addEventListener("DOMContentLoaded", displayRandomQuote);
+// Load initial quotes and display a random one
+async function initializeQuotes() {
+  await fetchQuotes(); // Fetch the quotes asynchronously
+  displayRandomQuote(); // Show a random quote once quotes are fetched
+}
 
 // Set up event listener for the "New quote" button click
 document
@@ -74,6 +114,9 @@ window.onload = function () {
   document.getElementById("quote").classList.add("visible");
   document.getElementById("author").classList.add("visible");
   document.getElementById("refresh").classList.add("visible");
+
+  // Initialize quotes on page load
+  initializeQuotes();
 };
 
 /*favion change*/
